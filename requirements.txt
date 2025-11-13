@@ -1,0 +1,42 @@
+# Core dependencies
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+
+# LangChain and RAG
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-community>=0.0.10
+langchain-openai>=0.0.2
+langchain-google-genai>=0.0.3
+langchain-chroma>=0.1.2
+
+# Vector databases
+# Note: Installing chromadb separately may be needed due to dependency conflicts
+chromadb
+pinecone-client>=3.1.0
+
+# PDF processing
+pypdf>=3.17.4
+
+# Embeddings
+sentence-transformers>=2.2.2
+
+# LLM providers
+openai>=1.6.1
+google-generativeai>=0.3.2
+
+# File watching
+watchdog>=3.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+pydantic>=2.5.2
+pydantic-settings>=2.1.0
+
+# Frontend
+streamlit>=1.29.0
+
+# Database
+aiosqlite>=0.19.0
+
