@@ -81,12 +81,12 @@ Run the data pipeline to process PDFs:
 # Process all PDFs once
 run_pipeline.bat
 # OR
-py run_pipeline.py
+py -3.11 run_pipeline.py
 
 # Process and watch for new files
 run_pipeline.bat --watch
 # OR
-py run_pipeline.py --watch
+py -3.11 run_pipeline.py --watch
 ```
 
 **On Linux/Mac:**
@@ -110,7 +110,7 @@ This will:
 ```bash
 run_api.bat
 # OR
-py run_api.py
+py -3.11 run_api.py
 # OR
 py -m uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
 ```
@@ -147,7 +147,7 @@ curl "http://localhost:8000/history/count"
 ```bash
 run_frontend.bat
 # OR
-py run_frontend.py
+py -3.11 run_frontend.py
 # OR
 py -m streamlit run frontend/streamlit_app.py
 ```
