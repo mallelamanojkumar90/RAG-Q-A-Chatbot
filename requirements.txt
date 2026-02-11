@@ -14,10 +14,14 @@ langchain-chroma>=0.1.2
 # Vector databases
 # Note: Installing chromadb separately may be needed due to dependency conflicts
 chromadb
-pinecone-client>=3.1.0
+pinecone>=5.1.0
+langchain-pinecone
 
 # PDF processing
 pypdf>=3.17.4
+pdf2image>=1.16.3
+pytesseract>=0.3.10
+Pillow>=10.0.0
 
 # Embeddings
 sentence-transformers>=2.2.2

@@ -37,12 +37,21 @@ class Settings(BaseSettings):
     chunk_size: int = int(os.getenv("CHUNK_SIZE", "1000"))
     chunk_overlap: int = int(os.getenv("CHUNK_OVERLAP", "200"))
     
+    # OCR Configuration (for image-based PDFs)
+    enable_ocr: bool = os.getenv("ENABLE_OCR", "true").lower() in ("true", "1", "yes")
+    ocr_language: str = os.getenv("OCR_LANGUAGE", "eng")  # Language code for Tesseract (eng, hin, etc.)
+    tesseract_cmd: str = os.getenv("TESSERACT_CMD", "")  # Optional: Path to tesseract.exe (if not in PATH)
+    poppler_path: str = os.getenv("POPPLER_PATH", "")  # Optional: Path to poppler bin directory (if not in PATH)
+    
     # Question Generation
     max_questions_per_request: int = int(os.getenv("MAX_QUESTIONS_PER_REQUEST", "100"))
     temperature: float = float(os.getenv("TEMPERATURE", "0.7"))
     
     # History Configuration
     history_db_path: str = os.getenv("HISTORY_DB_PATH", "./question_history.db")
+    
+    # Pipeline Configuration
+    processed_files_cache: str = os.getenv("PROCESSED_FILES_CACHE", "./processed_files.json")
     
     class Config:
         env_file = ".env"

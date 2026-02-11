@@ -9,8 +9,9 @@ except ImportError:
     from langchain_core.language_models.llms import BaseLLM as LLM
     from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 
-from langchain_openai import ChatOpenAI
-from langchain_google_genai import ChatGoogleGenerativeAI
+# Lazy imports to prevent startup crashes
+ChatOpenAI = None
+ChatGoogleGenerativeAI = None
 
 from config import settings
 
@@ -20,6 +21,12 @@ def get_llm():
     if settings.llm_provider == "openai":
         if not settings.openai_api_key:
             raise ValueError("OPENAI_API_KEY not set in environment")
+        
+        try:
+            from langchain_openai import ChatOpenAI
+        except ImportError:
+            raise ImportError("langchain-openai not installed. Please install: pip install langchain-openai")
+            
         return ChatOpenAI(
             model="gpt-4-turbo-preview",
             temperature=settings.temperature,
@@ -28,6 +35,12 @@ def get_llm():
     elif settings.llm_provider == "gemini":
         if not settings.gemini_api_key:
             raise ValueError("GEMINI_API_KEY not set in environment")
+            
+        try:
+            from langchain_google_genai import ChatGoogleGenerativeAI
+        except ImportError:
+            raise ImportError("langchain-google-genai not installed. Please install: pip install langchain-google-genai")
+            
         return ChatGoogleGenerativeAI(
             model="gemini-pro",
             temperature=settings.temperature,
