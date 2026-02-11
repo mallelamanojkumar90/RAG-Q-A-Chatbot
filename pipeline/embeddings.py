@@ -8,8 +8,9 @@ try:
 except ImportError:
     from langchain_core.embeddings import Embeddings
 
-from langchain_openai import OpenAIEmbeddings
-from langchain_community.embeddings import HuggingFaceEmbeddings
+# Lazy imports
+OpenAIEmbeddings = None
+HuggingFaceEmbeddings = None
 
 from config import settings
 
@@ -27,6 +28,11 @@ class SentenceTransformerEmbeddings(Embeddings):
     def __init__(self, model_name: str = None):
         if model_name is None:
             model_name = settings.embedding_model
+        
+        try:
+            from langchain_community.embeddings import HuggingFaceEmbeddings
+        except ImportError:
+            raise ImportError("langchain-community not installed. Please install: pip install langchain-community sentence-transformers")
         
         self.embeddings = HuggingFaceEmbeddings(
             model_name=model_name,
@@ -87,6 +93,12 @@ def get_embedding_function() -> Embeddings:
     if settings.embedding_provider == "openai":
         if not settings.openai_api_key:
             raise ValueError("OPENAI_API_KEY not set in environment")
+            
+        try:
+            from langchain_openai import OpenAIEmbeddings
+        except ImportError:
+            raise ImportError("langchain-openai not installed. Please install: pip install langchain-openai")
+            
         return OpenAIEmbeddings(
             model=settings.openai_embedding_model,
             openai_api_key=settings.openai_api_key

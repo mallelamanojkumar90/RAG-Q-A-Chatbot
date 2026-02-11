@@ -9,23 +9,10 @@ except ImportError:
     from langchain_core.vectorstores import VectorStore
     from langchain_core.embeddings import Embeddings
 
-# Try to import ChromaDB (optional, only needed if using chromadb)
+# Lazy imports
 Chroma = None
-try:
-    from langchain_chroma import Chroma
-except ImportError:
-    pass
-
-# Try to import from langchain-pinecone first, fallback to langchain-community
 PineconeVectorStore = None
 Pinecone = None
-try:
-    from langchain_pinecone import PineconeVectorStore
-except ImportError:
-    try:
-        from langchain_community.vectorstores import Pinecone
-    except ImportError:
-        pass
 
 from config import settings
 
@@ -416,11 +403,14 @@ def ensure_pinecone_index_exists(
 def get_vector_store(embedding_function: Embeddings) -> VectorStore:
     """Get the appropriate vector store based on configuration"""
     if settings.vector_db == "chromadb":
-        if Chroma is None:
+        try:
+            from langchain_chroma import Chroma
+        except ImportError:
             raise ImportError(
                 "ChromaDB vector store not available. "
                 "Please install: pip install langchain-chroma chromadb"
             )
+            
         return Chroma(
             persist_directory=settings.chroma_db_path,
             embedding_function=embedding_function,
@@ -455,12 +445,11 @@ def get_vector_store(embedding_function: Embeddings) -> VectorStore:
             metric="cosine"
         )
         
-        # Create or connect to the vector store
-        if PineconeVectorStore is not None:
-            # Use langchain-pinecone (newer API)
-            # langchain-pinecone reads PINECONE_API_KEY from environment or can use the client
-            import os
+        # Try to import from langchain-pinecone first, fallback to custom wrapper
+        try:
+            from langchain_pinecone import PineconeVectorStore
             # Ensure API key is in environment for langchain-pinecone
+            import os
             if 'PINECONE_API_KEY' not in os.environ:
                 os.environ['PINECONE_API_KEY'] = settings.pinecone_api_key
             
@@ -468,9 +457,8 @@ def get_vector_store(embedding_function: Embeddings) -> VectorStore:
                 index_name=settings.pinecone_index_name,
                 embedding=embedding_function
             )
-        else:
+        except ImportError:
             # Use custom Pinecone wrapper (works with new Pinecone client API)
-            # This is a fallback when langchain-pinecone is not available
             print("Using custom Pinecone vector store wrapper (langchain-pinecone not available)")
             index = pc_client.Index(settings.pinecone_index_name)
             return CustomPineconeVectorStore(

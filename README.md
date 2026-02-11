@@ -64,6 +64,34 @@ RAG Q&A Chatbot/
 
 ## 🔧 Usage
 
+### Quick Start - Run Everything with One Command
+
+**Option 1: Run Frontend + Backend API**
+```bash
+run_all.bat
+```
+This will start:
+- FastAPI Backend at `http://localhost:8000`
+- Streamlit Frontend at `http://localhost:8501`
+
+**Option 2: Run Frontend + Backend API + Data Pipeline**
+```bash
+run_all_with_pipeline.bat
+```
+This will start:
+- Data Pipeline (watching for new PDFs)
+- FastAPI Backend at `http://localhost:8000`
+- Streamlit Frontend at `http://localhost:8501`
+
+Both scripts will:
+- Open separate command windows for each service
+- Display service URLs
+- Allow you to stop all services by pressing any key in the main window
+
+---
+
+### Manual Setup (Step-by-Step)
+
 ### 1. Prepare Your Data
 
 Place your IIT JEE question paper PDFs in the `data/` folder:
